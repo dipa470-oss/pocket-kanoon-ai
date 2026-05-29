@@ -9,11 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FirIndexRouteImport } from './routes/fir.index'
+import { Route as ComplaintsIndexRouteImport } from './routes/complaints.index'
+import { Route as FirNewRouteImport } from './routes/fir.new'
+import { Route as FirIdRouteImport } from './routes/fir.$id'
+import { Route as ComplaintsNewRouteImport } from './routes/complaints.new'
+import { Route as ComplaintsIdRouteImport } from './routes/complaints.$id'
+import { Route as ApiGenerateRouteImport } from './routes/api/generate'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const DocumentsRoute = DocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
@@ -29,6 +48,41 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FirIndexRoute = FirIndexRouteImport.update({
+  id: '/fir/',
+  path: '/fir/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplaintsIndexRoute = ComplaintsIndexRouteImport.update({
+  id: '/complaints/',
+  path: '/complaints/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FirNewRoute = FirNewRouteImport.update({
+  id: '/fir/new',
+  path: '/fir/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FirIdRoute = FirIdRouteImport.update({
+  id: '/fir/$id',
+  path: '/fir/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplaintsNewRoute = ComplaintsNewRouteImport.update({
+  id: '/complaints/new',
+  path: '/complaints/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplaintsIdRoute = ComplaintsIdRouteImport.update({
+  id: '/complaints/$id',
+  path: '/complaints/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiGenerateRoute = ApiGenerateRouteImport.update({
+  id: '/api/generate',
+  path: '/api/generate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -39,38 +93,128 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
+  '/documents': typeof DocumentsRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/generate': typeof ApiGenerateRoute
+  '/complaints/$id': typeof ComplaintsIdRoute
+  '/complaints/new': typeof ComplaintsNewRoute
+  '/fir/$id': typeof FirIdRoute
+  '/fir/new': typeof FirNewRoute
+  '/complaints/': typeof ComplaintsIndexRoute
+  '/fir/': typeof FirIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
+  '/documents': typeof DocumentsRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/generate': typeof ApiGenerateRoute
+  '/complaints/$id': typeof ComplaintsIdRoute
+  '/complaints/new': typeof ComplaintsNewRoute
+  '/fir/$id': typeof FirIdRoute
+  '/fir/new': typeof FirNewRoute
+  '/complaints': typeof ComplaintsIndexRoute
+  '/fir': typeof FirIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/chat': typeof ChatRoute
+  '/dashboard': typeof DashboardRoute
+  '/documents': typeof DocumentsRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/generate': typeof ApiGenerateRoute
+  '/complaints/$id': typeof ComplaintsIdRoute
+  '/complaints/new': typeof ComplaintsNewRoute
+  '/fir/$id': typeof FirIdRoute
+  '/fir/new': typeof FirNewRoute
+  '/complaints/': typeof ComplaintsIndexRoute
+  '/fir/': typeof FirIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/chat' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/chat'
+    | '/dashboard'
+    | '/documents'
+    | '/api/chat'
+    | '/api/generate'
+    | '/complaints/$id'
+    | '/complaints/new'
+    | '/fir/$id'
+    | '/fir/new'
+    | '/complaints/'
+    | '/fir/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/chat' | '/api/chat'
-  id: '__root__' | '/' | '/auth' | '/chat' | '/api/chat'
+  to:
+    | '/'
+    | '/auth'
+    | '/chat'
+    | '/dashboard'
+    | '/documents'
+    | '/api/chat'
+    | '/api/generate'
+    | '/complaints/$id'
+    | '/complaints/new'
+    | '/fir/$id'
+    | '/fir/new'
+    | '/complaints'
+    | '/fir'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/chat'
+    | '/dashboard'
+    | '/documents'
+    | '/api/chat'
+    | '/api/generate'
+    | '/complaints/$id'
+    | '/complaints/new'
+    | '/fir/$id'
+    | '/fir/new'
+    | '/complaints/'
+    | '/fir/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   ChatRoute: typeof ChatRoute
+  DashboardRoute: typeof DashboardRoute
+  DocumentsRoute: typeof DocumentsRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiGenerateRoute: typeof ApiGenerateRoute
+  ComplaintsIdRoute: typeof ComplaintsIdRoute
+  ComplaintsNewRoute: typeof ComplaintsNewRoute
+  FirIdRoute: typeof FirIdRoute
+  FirNewRoute: typeof FirNewRoute
+  ComplaintsIndexRoute: typeof ComplaintsIndexRoute
+  FirIndexRoute: typeof FirIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/documents': {
+      id: '/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof DocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chat': {
       id: '/chat'
       path: '/chat'
@@ -92,6 +236,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fir/': {
+      id: '/fir/'
+      path: '/fir'
+      fullPath: '/fir/'
+      preLoaderRoute: typeof FirIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complaints/': {
+      id: '/complaints/'
+      path: '/complaints'
+      fullPath: '/complaints/'
+      preLoaderRoute: typeof ComplaintsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fir/new': {
+      id: '/fir/new'
+      path: '/fir/new'
+      fullPath: '/fir/new'
+      preLoaderRoute: typeof FirNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fir/$id': {
+      id: '/fir/$id'
+      path: '/fir/$id'
+      fullPath: '/fir/$id'
+      preLoaderRoute: typeof FirIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complaints/new': {
+      id: '/complaints/new'
+      path: '/complaints/new'
+      fullPath: '/complaints/new'
+      preLoaderRoute: typeof ComplaintsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complaints/$id': {
+      id: '/complaints/$id'
+      path: '/complaints/$id'
+      fullPath: '/complaints/$id'
+      preLoaderRoute: typeof ComplaintsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/generate': {
+      id: '/api/generate'
+      path: '/api/generate'
+      fullPath: '/api/generate'
+      preLoaderRoute: typeof ApiGenerateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -106,18 +299,17 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   ChatRoute: ChatRoute,
+  DashboardRoute: DashboardRoute,
+  DocumentsRoute: DocumentsRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiGenerateRoute: ApiGenerateRoute,
+  ComplaintsIdRoute: ComplaintsIdRoute,
+  ComplaintsNewRoute: ComplaintsNewRoute,
+  FirIdRoute: FirIdRoute,
+  FirNewRoute: FirNewRoute,
+  ComplaintsIndexRoute: ComplaintsIndexRoute,
+  FirIndexRoute: FirIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
