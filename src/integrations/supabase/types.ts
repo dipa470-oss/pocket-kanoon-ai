@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      complaints: {
+        Row: {
+          complaint_type: string
+          created_at: string
+          form_data: Json
+          generated_content: string | null
+          id: string
+          language: string
+          recipient: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          complaint_type: string
+          created_at?: string
+          form_data?: Json
+          generated_content?: string | null
+          id?: string
+          language?: string
+          recipient?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          complaint_type?: string
+          created_at?: string
+          form_data?: Json
+          generated_content?: string | null
+          id?: string
+          language?: string
+          recipient?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversations: {
         Row: {
           created_at: string
@@ -35,6 +77,54 @@ export type Database = {
           created_at?: string
           id?: string
           module?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fir_drafts: {
+        Row: {
+          created_at: string
+          form_data: Json
+          generated_content: string | null
+          id: string
+          incident_date: string | null
+          incident_location: string | null
+          language: string
+          police_station: string | null
+          state: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          form_data?: Json
+          generated_content?: string | null
+          id?: string
+          incident_date?: string | null
+          incident_location?: string | null
+          language?: string
+          police_station?: string | null
+          state?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          form_data?: Json
+          generated_content?: string | null
+          id?: string
+          incident_date?: string | null
+          incident_location?: string | null
+          language?: string
+          police_station?: string | null
+          state?: string | null
+          status?: string
           title?: string
           updated_at?: string
           user_id?: string
@@ -103,6 +193,78 @@ export type Database = {
           phone?: string | null
           preferred_language?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_exports: {
+        Row: {
+          created_at: string
+          file_name: string
+          format: string
+          id: string
+          source_id: string | null
+          source_type: string
+          storage_path: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          format: string
+          id?: string
+          source_id?: string | null
+          source_type: string
+          storage_path?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          format?: string
+          id?: string
+          source_id?: string | null
+          source_type?: string
+          storage_path?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_documents: {
+        Row: {
+          created_at: string
+          doc_type: string | null
+          id: string
+          mime_type: string | null
+          name: string
+          notes: string | null
+          size_bytes: number | null
+          storage_path: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          doc_type?: string | null
+          id?: string
+          mime_type?: string | null
+          name: string
+          notes?: string | null
+          size_bytes?: number | null
+          storage_path?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          doc_type?: string | null
+          id?: string
+          mime_type?: string | null
+          name?: string
+          notes?: string | null
+          size_bytes?: number | null
+          storage_path?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

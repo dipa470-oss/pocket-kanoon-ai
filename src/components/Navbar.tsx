@@ -38,10 +38,10 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {loading ? null : user ? (
             <Link
-              to="/chat"
+              to="/dashboard"
               className="text-sm font-medium px-4 py-2 rounded-md bg-gradient-to-br from-gold-soft to-gold text-primary-foreground shadow-gold hover:opacity-90 transition-opacity"
             >
-              Open Assistant
+              Dashboard
             </Link>
           ) : (
             <>
