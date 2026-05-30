@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Scale, LayoutDashboard, FileText, ShieldAlert, MessageSquare, FolderOpen, LogOut } from "lucide-react";
+import { Scale, LayoutDashboard, FileText, ShieldAlert, MessageSquare, FolderOpen, LogOut, FileSearch, ShieldCheck, Gavel, Landmark } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
@@ -9,6 +9,10 @@ const NAV = [
   { to: "/chat", label: "AI Lawyer", icon: MessageSquare },
   { to: "/complaints", label: "Complaints", icon: FileText },
   { to: "/fir", label: "FIR Drafts", icon: ShieldAlert },
+  { to: "/explain", label: "Explain Doc", icon: FileSearch },
+  { to: "/scam", label: "Scam Check", icon: ShieldCheck },
+  { to: "/notice-check", label: "Notice Check", icon: Gavel },
+  { to: "/property-verify", label: "Property", icon: Landmark },
   { to: "/documents", label: "Documents", icon: FolderOpen },
 ] as const;
 
