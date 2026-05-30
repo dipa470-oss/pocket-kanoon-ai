@@ -22,6 +22,7 @@ import { Route as ComplaintsNewRouteImport } from './routes/complaints.new'
 import { Route as ComplaintsIdRouteImport } from './routes/complaints.$id'
 import { Route as ApiGenerateRouteImport } from './routes/api/generate'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiAnalyzeRouteImport } from './routes/api/analyze'
 
 const DocumentsRoute = DocumentsRouteImport.update({
   id: '/documents',
@@ -88,6 +89,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAnalyzeRoute = ApiAnalyzeRouteImport.update({
+  id: '/api/analyze',
+  path: '/api/analyze',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
   '/complaints/$id': typeof ComplaintsIdRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
   '/complaints/$id': typeof ComplaintsIdRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
   '/complaints/$id': typeof ComplaintsIdRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/dashboard'
     | '/documents'
+    | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
     | '/complaints/$id'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/dashboard'
     | '/documents'
+    | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
     | '/complaints/$id'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/dashboard'
     | '/documents'
+    | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
     | '/complaints/$id'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   DashboardRoute: typeof DashboardRoute
   DocumentsRoute: typeof DocumentsRoute
+  ApiAnalyzeRoute: typeof ApiAnalyzeRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiGenerateRoute: typeof ApiGenerateRoute
   ComplaintsIdRoute: typeof ComplaintsIdRoute
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/analyze': {
+      id: '/api/analyze'
+      path: '/api/analyze'
+      fullPath: '/api/analyze'
+      preLoaderRoute: typeof ApiAnalyzeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -301,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   DashboardRoute: DashboardRoute,
   DocumentsRoute: DocumentsRoute,
+  ApiAnalyzeRoute: ApiAnalyzeRoute,
   ApiChatRoute: ApiChatRoute,
   ApiGenerateRoute: ApiGenerateRoute,
   ComplaintsIdRoute: ComplaintsIdRoute,
