@@ -4,6 +4,7 @@ import { Scale, Send, Loader2, LogOut, Plus, MessageSquare } from "lucide-react"
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import { authenticatedFetch } from "@/lib/authenticated-fetch";
 
 type Msg = { id?: string; role: "user" | "assistant"; content: string };
 type Conv = { id: string; title: string; updated_at: string };
@@ -136,7 +137,7 @@ function ChatPage() {
 
     let assistantText = "";
     try {
-      const resp = await fetch("/api/chat", {
+      const resp = await authenticatedFetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

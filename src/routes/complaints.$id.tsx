@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { complaintTypeById } from "@/lib/complaint-types";
 import { toast } from "sonner";
+import { authenticatedFetch } from "@/lib/authenticated-fetch";
 import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/complaints/$id")({
@@ -71,7 +72,7 @@ function ComplaintEditor() {
   const generate = async () => {
     setGenerating(true);
     try {
-      const resp = await fetch("/api/generate", {
+      const resp = await authenticatedFetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

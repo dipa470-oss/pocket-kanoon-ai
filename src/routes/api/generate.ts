@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSupabaseAuthRequest } from "@/integrations/supabase/require-auth-request";
 
 const COMPLAINT_SYSTEM = `You are a senior Indian legal drafter. Generate a professional, formal, ready-to-submit complaint letter or FIR draft based on the user's inputs.
 
@@ -14,6 +15,7 @@ Rules:
 
 export const Route = createFileRoute("/api/generate")({
   server: {
+    middleware: [requireSupabaseAuthRequest],
     handlers: {
       POST: async ({ request }) => {
         const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;

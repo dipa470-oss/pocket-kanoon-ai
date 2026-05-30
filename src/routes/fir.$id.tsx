@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { FIR_FIELDS } from "@/lib/complaint-types";
 import { toast } from "sonner";
+import { authenticatedFetch } from "@/lib/authenticated-fetch";
 
 export const Route = createFileRoute("/fir/$id")({
   head: () => ({ meta: [{ title: "FIR Draft — Pocket Lawyer AI" }] }),
@@ -67,7 +68,7 @@ function FirEditor() {
   const generate = async () => {
     setGenerating(true);
     try {
-      const resp = await fetch("/api/generate", {
+      const resp = await authenticatedFetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kind: "fir", subType: "FIR", language, data: formData }),

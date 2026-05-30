@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSupabaseAuthRequest } from "@/integrations/supabase/require-auth-request";
 
 // AI Personal Lawyer streaming endpoint.
 // Proxies to Lovable AI Gateway with SSE streaming.
@@ -22,6 +23,7 @@ Rules:
 
 export const Route = createFileRoute("/api/chat")({
   server: {
+    middleware: [requireSupabaseAuthRequest],
     handlers: {
       POST: async ({ request }) => {
         const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;

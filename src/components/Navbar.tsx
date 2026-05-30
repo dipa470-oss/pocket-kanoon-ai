@@ -1,9 +1,11 @@
 import { Scale } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
+import { useAdmin } from "@/hooks/use-admin";
 
 export function Navbar() {
   const { user, loading } = useAuth();
+  const { isAdmin } = useAdmin();
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/50">
@@ -37,12 +39,22 @@ export function Navbar() {
 
         <div className="flex items-center gap-3">
           {loading ? null : user ? (
-            <Link
-              to="/dashboard"
-              className="text-sm font-medium px-4 py-2 rounded-md bg-gradient-to-br from-gold-soft to-gold text-primary-foreground shadow-gold hover:opacity-90 transition-opacity"
-            >
-              Dashboard
-            </Link>
+            <>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="hidden sm:inline-flex text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Admin
+                </Link>
+              )}
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium px-4 py-2 rounded-md bg-gradient-to-br from-gold-soft to-gold text-primary-foreground shadow-gold hover:opacity-90 transition-opacity"
+              >
+                Dashboard
+              </Link>
+            </>
           ) : (
             <>
               <Link

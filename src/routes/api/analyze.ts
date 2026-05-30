@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSupabaseAuthRequest } from "@/integrations/supabase/require-auth-request";
 
 type Kind = "document" | "scam" | "notice" | "property";
 
@@ -168,6 +169,7 @@ function toolForKind(kind: Kind) {
 
 export const Route = createFileRoute("/api/analyze")({
   server: {
+    middleware: [requireSupabaseAuthRequest],
     handlers: {
       POST: async ({ request }) => {
         const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;

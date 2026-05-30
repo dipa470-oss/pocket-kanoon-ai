@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Upload, Loader2, FileText, Download, Save, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { extractTextFromFile } from "@/lib/file-text";
+import { authenticatedFetch } from "@/lib/authenticated-fetch";
 import { exportPDF } from "@/lib/exporters";
 
 type Severity = "low" | "medium" | "high" | "critical" | "safe";
@@ -80,7 +81,7 @@ export function AnalyzerPanel<T>({
     setLoading(true);
     setStatus("Analyzing with AI…");
     try {
-      const res = await fetch("/api/analyze", {
+      const res = await authenticatedFetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kind, language, text }),

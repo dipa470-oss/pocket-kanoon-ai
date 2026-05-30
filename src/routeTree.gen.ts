@@ -16,10 +16,13 @@ import { Route as ExplainRouteImport } from './routes/explain'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as BillingRouteImport } from './routes/billing'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FirIndexRouteImport } from './routes/fir.index'
 import { Route as ComplaintsIndexRouteImport } from './routes/complaints.index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as FirNewRouteImport } from './routes/fir.new'
 import { Route as FirIdRouteImport } from './routes/fir.$id'
 import { Route as ComplaintsNewRouteImport } from './routes/complaints.new'
@@ -27,6 +30,17 @@ import { Route as ComplaintsIdRouteImport } from './routes/complaints.$id'
 import { Route as ApiGenerateRouteImport } from './routes/api/generate'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiAnalyzeRouteImport } from './routes/api/analyze'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
+import { Route as AdminFirRouteImport } from './routes/admin/fir'
+import { Route as AdminDocumentsRouteImport } from './routes/admin/documents'
+import { Route as AdminComplaintsRouteImport } from './routes/admin/complaints'
+import { Route as AdminChatsRouteImport } from './routes/admin/chats'
+import { Route as ApiWebhooksRazorpayRouteImport } from './routes/api/webhooks/razorpay'
+import { Route as ApiSubscriptionsVerifyRouteImport } from './routes/api/subscriptions/verify'
+import { Route as ApiSubscriptionsSyncRouteImport } from './routes/api/subscriptions/sync'
+import { Route as ApiSubscriptionsCheckoutRouteImport } from './routes/api/subscriptions/checkout'
+import { Route as ApiSubscriptionsChangePlanRouteImport } from './routes/api/subscriptions/change-plan'
 
 const ScamRoute = ScamRouteImport.update({
   id: '/scam',
@@ -63,9 +77,19 @@ const ChatRoute = ChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -82,6 +106,11 @@ const ComplaintsIndexRoute = ComplaintsIndexRouteImport.update({
   id: '/complaints/',
   path: '/complaints/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const FirNewRoute = FirNewRouteImport.update({
   id: '/fir/new',
@@ -118,10 +147,69 @@ const ApiAnalyzeRoute = ApiAnalyzeRouteImport.update({
   path: '/api/analyze',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFirRoute = AdminFirRouteImport.update({
+  id: '/fir',
+  path: '/fir',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDocumentsRoute = AdminDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminComplaintsRoute = AdminComplaintsRouteImport.update({
+  id: '/complaints',
+  path: '/complaints',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminChatsRoute = AdminChatsRouteImport.update({
+  id: '/chats',
+  path: '/chats',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiWebhooksRazorpayRoute = ApiWebhooksRazorpayRouteImport.update({
+  id: '/api/webhooks/razorpay',
+  path: '/api/webhooks/razorpay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubscriptionsVerifyRoute = ApiSubscriptionsVerifyRouteImport.update({
+  id: '/api/subscriptions/verify',
+  path: '/api/subscriptions/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubscriptionsSyncRoute = ApiSubscriptionsSyncRouteImport.update({
+  id: '/api/subscriptions/sync',
+  path: '/api/subscriptions/sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubscriptionsCheckoutRoute =
+  ApiSubscriptionsCheckoutRouteImport.update({
+    id: '/api/subscriptions/checkout',
+    path: '/api/subscriptions/checkout',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiSubscriptionsChangePlanRoute =
+  ApiSubscriptionsChangePlanRouteImport.update({
+    id: '/api/subscriptions/change-plan',
+    path: '/api/subscriptions/change-plan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
@@ -129,6 +217,12 @@ export interface FileRoutesByFullPath {
   '/notice-check': typeof NoticeCheckRoute
   '/property-verify': typeof PropertyVerifyRoute
   '/scam': typeof ScamRoute
+  '/admin/chats': typeof AdminChatsRoute
+  '/admin/complaints': typeof AdminComplaintsRoute
+  '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/fir': typeof AdminFirRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
@@ -136,12 +230,19 @@ export interface FileRoutesByFullPath {
   '/complaints/new': typeof ComplaintsNewRoute
   '/fir/$id': typeof FirIdRoute
   '/fir/new': typeof FirNewRoute
+  '/admin/': typeof AdminIndexRoute
   '/complaints/': typeof ComplaintsIndexRoute
   '/fir/': typeof FirIndexRoute
+  '/api/subscriptions/change-plan': typeof ApiSubscriptionsChangePlanRoute
+  '/api/subscriptions/checkout': typeof ApiSubscriptionsCheckoutRoute
+  '/api/subscriptions/sync': typeof ApiSubscriptionsSyncRoute
+  '/api/subscriptions/verify': typeof ApiSubscriptionsVerifyRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
@@ -149,6 +250,12 @@ export interface FileRoutesByTo {
   '/notice-check': typeof NoticeCheckRoute
   '/property-verify': typeof PropertyVerifyRoute
   '/scam': typeof ScamRoute
+  '/admin/chats': typeof AdminChatsRoute
+  '/admin/complaints': typeof AdminComplaintsRoute
+  '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/fir': typeof AdminFirRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
@@ -156,13 +263,21 @@ export interface FileRoutesByTo {
   '/complaints/new': typeof ComplaintsNewRoute
   '/fir/$id': typeof FirIdRoute
   '/fir/new': typeof FirNewRoute
+  '/admin': typeof AdminIndexRoute
   '/complaints': typeof ComplaintsIndexRoute
   '/fir': typeof FirIndexRoute
+  '/api/subscriptions/change-plan': typeof ApiSubscriptionsChangePlanRoute
+  '/api/subscriptions/checkout': typeof ApiSubscriptionsCheckoutRoute
+  '/api/subscriptions/sync': typeof ApiSubscriptionsSyncRoute
+  '/api/subscriptions/verify': typeof ApiSubscriptionsVerifyRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
@@ -170,6 +285,12 @@ export interface FileRoutesById {
   '/notice-check': typeof NoticeCheckRoute
   '/property-verify': typeof PropertyVerifyRoute
   '/scam': typeof ScamRoute
+  '/admin/chats': typeof AdminChatsRoute
+  '/admin/complaints': typeof AdminComplaintsRoute
+  '/admin/documents': typeof AdminDocumentsRoute
+  '/admin/fir': typeof AdminFirRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
@@ -177,14 +298,22 @@ export interface FileRoutesById {
   '/complaints/new': typeof ComplaintsNewRoute
   '/fir/$id': typeof FirIdRoute
   '/fir/new': typeof FirNewRoute
+  '/admin/': typeof AdminIndexRoute
   '/complaints/': typeof ComplaintsIndexRoute
   '/fir/': typeof FirIndexRoute
+  '/api/subscriptions/change-plan': typeof ApiSubscriptionsChangePlanRoute
+  '/api/subscriptions/checkout': typeof ApiSubscriptionsCheckoutRoute
+  '/api/subscriptions/sync': typeof ApiSubscriptionsSyncRoute
+  '/api/subscriptions/verify': typeof ApiSubscriptionsVerifyRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/auth'
+    | '/billing'
     | '/chat'
     | '/dashboard'
     | '/documents'
@@ -192,6 +321,12 @@ export interface FileRouteTypes {
     | '/notice-check'
     | '/property-verify'
     | '/scam'
+    | '/admin/chats'
+    | '/admin/complaints'
+    | '/admin/documents'
+    | '/admin/fir'
+    | '/admin/subscriptions'
+    | '/admin/users'
     | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
@@ -199,12 +334,19 @@ export interface FileRouteTypes {
     | '/complaints/new'
     | '/fir/$id'
     | '/fir/new'
+    | '/admin/'
     | '/complaints/'
     | '/fir/'
+    | '/api/subscriptions/change-plan'
+    | '/api/subscriptions/checkout'
+    | '/api/subscriptions/sync'
+    | '/api/subscriptions/verify'
+    | '/api/webhooks/razorpay'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/billing'
     | '/chat'
     | '/dashboard'
     | '/documents'
@@ -212,6 +354,12 @@ export interface FileRouteTypes {
     | '/notice-check'
     | '/property-verify'
     | '/scam'
+    | '/admin/chats'
+    | '/admin/complaints'
+    | '/admin/documents'
+    | '/admin/fir'
+    | '/admin/subscriptions'
+    | '/admin/users'
     | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
@@ -219,12 +367,20 @@ export interface FileRouteTypes {
     | '/complaints/new'
     | '/fir/$id'
     | '/fir/new'
+    | '/admin'
     | '/complaints'
     | '/fir'
+    | '/api/subscriptions/change-plan'
+    | '/api/subscriptions/checkout'
+    | '/api/subscriptions/sync'
+    | '/api/subscriptions/verify'
+    | '/api/webhooks/razorpay'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/auth'
+    | '/billing'
     | '/chat'
     | '/dashboard'
     | '/documents'
@@ -232,6 +388,12 @@ export interface FileRouteTypes {
     | '/notice-check'
     | '/property-verify'
     | '/scam'
+    | '/admin/chats'
+    | '/admin/complaints'
+    | '/admin/documents'
+    | '/admin/fir'
+    | '/admin/subscriptions'
+    | '/admin/users'
     | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
@@ -239,13 +401,21 @@ export interface FileRouteTypes {
     | '/complaints/new'
     | '/fir/$id'
     | '/fir/new'
+    | '/admin/'
     | '/complaints/'
     | '/fir/'
+    | '/api/subscriptions/change-plan'
+    | '/api/subscriptions/checkout'
+    | '/api/subscriptions/sync'
+    | '/api/subscriptions/verify'
+    | '/api/webhooks/razorpay'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BillingRoute: typeof BillingRoute
   ChatRoute: typeof ChatRoute
   DashboardRoute: typeof DashboardRoute
   DocumentsRoute: typeof DocumentsRoute
@@ -262,6 +432,11 @@ export interface RootRouteChildren {
   FirNewRoute: typeof FirNewRoute
   ComplaintsIndexRoute: typeof ComplaintsIndexRoute
   FirIndexRoute: typeof FirIndexRoute
+  ApiSubscriptionsChangePlanRoute: typeof ApiSubscriptionsChangePlanRoute
+  ApiSubscriptionsCheckoutRoute: typeof ApiSubscriptionsCheckoutRoute
+  ApiSubscriptionsSyncRoute: typeof ApiSubscriptionsSyncRoute
+  ApiSubscriptionsVerifyRoute: typeof ApiSubscriptionsVerifyRoute
+  ApiWebhooksRazorpayRoute: typeof ApiWebhooksRazorpayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -315,11 +490,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -342,6 +531,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/complaints/'
       preLoaderRoute: typeof ComplaintsIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/fir/new': {
       id: '/fir/new'
@@ -392,12 +588,113 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAnalyzeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/subscriptions': {
+      id: '/admin/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AdminSubscriptionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/fir': {
+      id: '/admin/fir'
+      path: '/fir'
+      fullPath: '/admin/fir'
+      preLoaderRoute: typeof AdminFirRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/documents': {
+      id: '/admin/documents'
+      path: '/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AdminDocumentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/complaints': {
+      id: '/admin/complaints'
+      path: '/complaints'
+      fullPath: '/admin/complaints'
+      preLoaderRoute: typeof AdminComplaintsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/chats': {
+      id: '/admin/chats'
+      path: '/chats'
+      fullPath: '/admin/chats'
+      preLoaderRoute: typeof AdminChatsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/webhooks/razorpay': {
+      id: '/api/webhooks/razorpay'
+      path: '/api/webhooks/razorpay'
+      fullPath: '/api/webhooks/razorpay'
+      preLoaderRoute: typeof ApiWebhooksRazorpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/subscriptions/verify': {
+      id: '/api/subscriptions/verify'
+      path: '/api/subscriptions/verify'
+      fullPath: '/api/subscriptions/verify'
+      preLoaderRoute: typeof ApiSubscriptionsVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/subscriptions/sync': {
+      id: '/api/subscriptions/sync'
+      path: '/api/subscriptions/sync'
+      fullPath: '/api/subscriptions/sync'
+      preLoaderRoute: typeof ApiSubscriptionsSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/subscriptions/checkout': {
+      id: '/api/subscriptions/checkout'
+      path: '/api/subscriptions/checkout'
+      fullPath: '/api/subscriptions/checkout'
+      preLoaderRoute: typeof ApiSubscriptionsCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/subscriptions/change-plan': {
+      id: '/api/subscriptions/change-plan'
+      path: '/api/subscriptions/change-plan'
+      fullPath: '/api/subscriptions/change-plan'
+      preLoaderRoute: typeof ApiSubscriptionsChangePlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminChatsRoute: typeof AdminChatsRoute
+  AdminComplaintsRoute: typeof AdminComplaintsRoute
+  AdminDocumentsRoute: typeof AdminDocumentsRoute
+  AdminFirRoute: typeof AdminFirRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminChatsRoute: AdminChatsRoute,
+  AdminComplaintsRoute: AdminComplaintsRoute,
+  AdminDocumentsRoute: AdminDocumentsRoute,
+  AdminFirRoute: AdminFirRoute,
+  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
+  BillingRoute: BillingRoute,
   ChatRoute: ChatRoute,
   DashboardRoute: DashboardRoute,
   DocumentsRoute: DocumentsRoute,
@@ -414,7 +711,22 @@ const rootRouteChildren: RootRouteChildren = {
   FirNewRoute: FirNewRoute,
   ComplaintsIndexRoute: ComplaintsIndexRoute,
   FirIndexRoute: FirIndexRoute,
+  ApiSubscriptionsChangePlanRoute: ApiSubscriptionsChangePlanRoute,
+  ApiSubscriptionsCheckoutRoute: ApiSubscriptionsCheckoutRoute,
+  ApiSubscriptionsSyncRoute: ApiSubscriptionsSyncRoute,
+  ApiSubscriptionsVerifyRoute: ApiSubscriptionsVerifyRoute,
+  ApiWebhooksRazorpayRoute: ApiWebhooksRazorpayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

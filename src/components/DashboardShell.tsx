@@ -1,5 +1,22 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Scale, LayoutDashboard, FileText, ShieldAlert, MessageSquare, FolderOpen, LogOut, FileSearch, ShieldCheck, Gavel, Landmark } from "lucide-react";
+import {
+  Scale,
+  LayoutDashboard,
+  FileText,
+  ShieldAlert,
+  MessageSquare,
+  FolderOpen,
+  LogOut,
+  FileSearch,
+  ShieldCheck,
+  Gavel,
+  Landmark,
+  Settings,
+  CreditCard,
+} from "lucide-react";
+import { useAdmin } from "@/hooks/use-admin";
+import { useSubscription } from "@/hooks/use-subscription";
+import { PremiumBadge } from "@/components/PremiumBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
@@ -14,10 +31,13 @@ const NAV = [
   { to: "/notice-check", label: "Notice Check", icon: Gavel },
   { to: "/property-verify", label: "Property", icon: Landmark },
   { to: "/documents", label: "Documents", icon: FolderOpen },
+  { to: "/billing", label: "Billing", icon: CreditCard },
 ] as const;
 
 export function DashboardShell({ children, title }: { children: ReactNode; title?: string }) {
   const router = useRouter();
+  const { isAdmin } = useAdmin();
+  const { plan } = useSubscription();
   const signOut = async () => {
     await supabase.auth.signOut();
     toast.success("Signed out");
@@ -49,6 +69,16 @@ export function DashboardShell({ children, title }: { children: ReactNode; title
               {label}
             </Link>
           ))}
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-accent/40 transition-colors"
+              activeProps={{ className: "!text-foreground bg-accent/60 border border-border" }}
+            >
+              <Settings className="w-4 h-4" />
+              Admin
+            </Link>
+          )}
           <button
             onClick={signOut}
             className="mt-auto flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-muted-foreground hover:text-destructive transition-colors"
@@ -76,9 +106,12 @@ export function DashboardShell({ children, title }: { children: ReactNode; title
         </nav>
 
         <main className="flex-1 min-w-0 pb-24 md:pb-10">
-          <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/60 border-b border-border/60 px-5 md:px-8 py-4 flex items-center justify-between">
+          <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/60 border-b border-border/60 px-5 md:px-8 py-4 flex items-center justify-between gap-3">
             <h1 className="font-display text-xl md:text-2xl font-semibold">{title ?? "Dashboard"}</h1>
-            <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">← Home</Link>
+            <div className="flex items-center gap-3">
+              <PremiumBadge plan={plan} />
+              <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">← Home</Link>
+            </div>
           </header>
           <div className="p-5 md:p-8">{children}</div>
         </main>

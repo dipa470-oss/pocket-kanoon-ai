@@ -5,6 +5,7 @@ import { RequireAuth } from "@/components/RequireAuth";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { planLabelWithBilling } from "@/lib/admin/format";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -22,11 +23,12 @@ function DashboardPage() {
   const [counts, setCounts] = useState({ complaints: 0, fir: 0, chats: 0, docs: 0, explains: 0, scams: 0, notices: 0, properties: 0 });
   const [recentComplaints, setRecentComplaints] = useState<{ id: string; title: string; complaint_type: string; updated_at: string }[]>([]);
   const [recentFir, setRecentFir] = useState<{ id: string; title: string; updated_at: string }[]>([]);
+  const [plan, setPlan] = useState("free");
 
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const [c, f, ch, d, ex, sc, no, pr, rc, rf] = await Promise.all([
+      const [c, f, ch, d, ex, sc, no, pr, rc, rf, sub] = await Promise.all([
         supabase.from("complaints").select("id", { count: "exact", head: true }),
         supabase.from("fir_drafts").select("id", { count: "exact", head: true }),
         supabase.from("conversations").select("id", { count: "exact", head: true }),
@@ -37,7 +39,9 @@ function DashboardPage() {
         supabase.from("property_verifications").select("id", { count: "exact", head: true }),
         supabase.from("complaints").select("id,title,complaint_type,updated_at").order("updated_at", { ascending: false }).limit(5),
         supabase.from("fir_drafts").select("id,title,updated_at").order("updated_at", { ascending: false }).limit(5),
+        supabase.from("subscriptions").select("plan").eq("user_id", user.id).maybeSingle(),
       ]);
+      if (sub.data?.plan) setPlan(sub.data.plan);
       setCounts({
         complaints: c.count ?? 0, fir: f.count ?? 0, chats: ch.count ?? 0, docs: d.count ?? 0,
         explains: ex.count ?? 0, scams: sc.count ?? 0, notices: no.count ?? 0, properties: pr.count ?? 0,
@@ -113,8 +117,11 @@ function DashboardPage() {
         <section className="grid lg:grid-cols-2 gap-5">
           <div className="rounded-xl border border-border/60 bg-card-elegant p-6">
             <div className="flex items-center gap-2 mb-2"><Crown className="w-5 h-5 text-primary" /><h3 className="font-display text-lg font-semibold">Subscription</h3></div>
-            <p className="text-sm text-muted-foreground mb-4">You are on the <span className="text-primary font-medium">Free</span> plan. Unlock unlimited drafts and lawyer consultations.</p>
-            <Link to="/" hash="pricing" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">View plans <ArrowRight className="w-3.5 h-3.5" /></Link>
+            <p className="text-sm text-muted-foreground mb-4">
+              You are on the <span className="text-primary font-medium">{planLabelWithBilling(plan)}</span>.
+              {plan === "free" && " Unlock unlimited drafts and lawyer consultations."}
+            </p>
+            <Link to="/billing" className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline">Manage billing <ArrowRight className="w-3.5 h-3.5" /></Link>
           </div>
           <div className="rounded-xl border border-border/60 bg-card-elegant p-6">
             <div className="flex items-center gap-2 mb-2"><Bell className="w-5 h-5 text-primary" /><h3 className="font-display text-lg font-semibold">Notifications</h3></div>
