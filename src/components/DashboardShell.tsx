@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Scale, LayoutDashboard, FileText, ShieldAlert, MessageSquare, FolderOpen, LogOut } from "lucide-react";
+import { Scale, LayoutDashboard, FileText, ShieldAlert, MessageSquare, FolderOpen, LogOut, FileSearch, ShieldCheck, Gavel, Landmark } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
@@ -9,6 +9,10 @@ const NAV = [
   { to: "/chat", label: "AI Lawyer", icon: MessageSquare },
   { to: "/complaints", label: "Complaints", icon: FileText },
   { to: "/fir", label: "FIR Drafts", icon: ShieldAlert },
+  { to: "/explain", label: "Explain Doc", icon: FileSearch },
+  { to: "/scam", label: "Scam Check", icon: ShieldCheck },
+  { to: "/notice-check", label: "Notice Check", icon: Gavel },
+  { to: "/property-verify", label: "Property", icon: Landmark },
   { to: "/documents", label: "Documents", icon: FolderOpen },
 ] as const;
 
@@ -55,18 +59,20 @@ export function DashboardShell({ children, title }: { children: ReactNode; title
         </aside>
 
         {/* Mobile bottom nav */}
-        <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border flex justify-around py-2">
-          {NAV.map(({ to, label, icon: Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className="flex flex-col items-center gap-0.5 px-2 py-1 text-[10px] text-muted-foreground"
-              activeProps={{ className: "!text-primary" }}
-            >
-              <Icon className="w-5 h-5" />
-              {label}
-            </Link>
-          ))}
+        <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border overflow-x-auto">
+          <div className="flex gap-1 py-2 px-2 min-w-max">
+            {NAV.map(({ to, label, icon: Icon }) => (
+              <Link
+                key={to}
+                to={to}
+                className="flex flex-col items-center gap-0.5 px-3 py-1 text-[10px] text-muted-foreground shrink-0"
+                activeProps={{ className: "!text-primary" }}
+              >
+                <Icon className="w-5 h-5" />
+                {label}
+              </Link>
+            ))}
+          </div>
         </nav>
 
         <main className="flex-1 min-w-0 pb-24 md:pb-10">

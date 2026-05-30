@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { FileText, ShieldAlert, MessageSquare, FolderOpen, Sparkles, Crown, Bell, ArrowRight } from "lucide-react";
+import { FileText, ShieldAlert, MessageSquare, FolderOpen, Sparkles, Crown, Bell, ArrowRight, FileSearch, ShieldCheck, Gavel, Landmark } from "lucide-react";
 import { RequireAuth } from "@/components/RequireAuth";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,32 +19,43 @@ export const Route = createFileRoute("/dashboard")({
 
 function DashboardPage() {
   const { user } = useAuth();
-  const [counts, setCounts] = useState({ complaints: 0, fir: 0, chats: 0, docs: 0 });
+  const [counts, setCounts] = useState({ complaints: 0, fir: 0, chats: 0, docs: 0, explains: 0, scams: 0, notices: 0, properties: 0 });
   const [recentComplaints, setRecentComplaints] = useState<{ id: string; title: string; complaint_type: string; updated_at: string }[]>([]);
   const [recentFir, setRecentFir] = useState<{ id: string; title: string; updated_at: string }[]>([]);
 
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const [c, f, ch, d, rc, rf] = await Promise.all([
+      const [c, f, ch, d, ex, sc, no, pr, rc, rf] = await Promise.all([
         supabase.from("complaints").select("id", { count: "exact", head: true }),
         supabase.from("fir_drafts").select("id", { count: "exact", head: true }),
         supabase.from("conversations").select("id", { count: "exact", head: true }),
         supabase.from("user_documents").select("id", { count: "exact", head: true }),
+        supabase.from("document_analyses").select("id", { count: "exact", head: true }),
+        supabase.from("scam_reports").select("id", { count: "exact", head: true }),
+        supabase.from("legal_notice_reviews").select("id", { count: "exact", head: true }),
+        supabase.from("property_verifications").select("id", { count: "exact", head: true }),
         supabase.from("complaints").select("id,title,complaint_type,updated_at").order("updated_at", { ascending: false }).limit(5),
         supabase.from("fir_drafts").select("id,title,updated_at").order("updated_at", { ascending: false }).limit(5),
       ]);
-      setCounts({ complaints: c.count ?? 0, fir: f.count ?? 0, chats: ch.count ?? 0, docs: d.count ?? 0 });
+      setCounts({
+        complaints: c.count ?? 0, fir: f.count ?? 0, chats: ch.count ?? 0, docs: d.count ?? 0,
+        explains: ex.count ?? 0, scams: sc.count ?? 0, notices: no.count ?? 0, properties: pr.count ?? 0,
+      });
       setRecentComplaints(rc.data ?? []);
       setRecentFir(rf.data ?? []);
     })();
   }, [user]);
 
   const cards = [
-    { label: "Saved Complaints", count: counts.complaints, icon: FileText, to: "/complaints" as const },
+    { label: "Complaints", count: counts.complaints, icon: FileText, to: "/complaints" as const },
     { label: "FIR Drafts", count: counts.fir, icon: ShieldAlert, to: "/fir" as const },
     { label: "AI Chats", count: counts.chats, icon: MessageSquare, to: "/chat" as const },
     { label: "Documents", count: counts.docs, icon: FolderOpen, to: "/documents" as const },
+    { label: "Explained", count: counts.explains, icon: FileSearch, to: "/explain" as const },
+    { label: "Scam Checks", count: counts.scams, icon: ShieldCheck, to: "/scam" as const },
+    { label: "Notices", count: counts.notices, icon: Gavel, to: "/notice-check" as const },
+    { label: "Property", count: counts.properties, icon: Landmark, to: "/property-verify" as const },
   ];
 
   return (

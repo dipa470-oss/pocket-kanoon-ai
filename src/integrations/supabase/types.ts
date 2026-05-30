@@ -83,6 +83,66 @@ export type Database = {
         }
         Relationships: []
       }
+      document_analyses: {
+        Row: {
+          actions: Json
+          clauses: Json
+          created_at: string
+          deadlines: Json
+          doc_kind: string
+          id: string
+          language: string
+          mime_type: string | null
+          raw_analysis: string | null
+          risks: Json
+          source_text: string | null
+          status: string
+          storage_path: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actions?: Json
+          clauses?: Json
+          created_at?: string
+          deadlines?: Json
+          doc_kind?: string
+          id?: string
+          language?: string
+          mime_type?: string | null
+          raw_analysis?: string | null
+          risks?: Json
+          source_text?: string | null
+          status?: string
+          storage_path?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actions?: Json
+          clauses?: Json
+          created_at?: string
+          deadlines?: Json
+          doc_kind?: string
+          id?: string
+          language?: string
+          mime_type?: string | null
+          raw_analysis?: string | null
+          risks?: Json
+          source_text?: string | null
+          status?: string
+          storage_path?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       fir_drafts: {
         Row: {
           created_at: string
@@ -127,6 +187,54 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      legal_notice_reviews: {
+        Row: {
+          created_at: string
+          deadlines: Json
+          id: string
+          language: string
+          notice_text: string
+          raw_analysis: string | null
+          recommended_response: string | null
+          risk_level: string
+          summary: string | null
+          title: string
+          updated_at: string
+          urgency_score: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deadlines?: Json
+          id?: string
+          language?: string
+          notice_text: string
+          raw_analysis?: string | null
+          recommended_response?: string | null
+          risk_level?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          urgency_score?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deadlines?: Json
+          id?: string
+          language?: string
+          notice_text?: string
+          raw_analysis?: string | null
+          recommended_response?: string | null
+          risk_level?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          urgency_score?: number
           user_id?: string
         }
         Relationships: []
@@ -196,6 +304,60 @@ export type Database = {
         }
         Relationships: []
       }
+      property_verifications: {
+        Row: {
+          created_at: string
+          guidance: string | null
+          id: string
+          language: string
+          missing_fields: Json
+          ownership_checklist: Json
+          property_type: string
+          raw_analysis: string | null
+          risks: Json
+          source_text: string
+          state: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          guidance?: string | null
+          id?: string
+          language?: string
+          missing_fields?: Json
+          ownership_checklist?: Json
+          property_type?: string
+          raw_analysis?: string | null
+          risks?: Json
+          source_text: string
+          state?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          guidance?: string | null
+          id?: string
+          language?: string
+          missing_fields?: Json
+          ownership_checklist?: Json
+          property_type?: string
+          raw_analysis?: string | null
+          risks?: Json
+          source_text?: string
+          state?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_exports: {
         Row: {
           created_at: string
@@ -225,6 +387,57 @@ export type Database = {
           source_id?: string | null
           source_type?: string
           storage_path?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      scam_reports: {
+        Row: {
+          actions: Json
+          channel: string
+          content: string
+          created_at: string
+          explanation: string | null
+          id: string
+          indicators: Json
+          language: string
+          raw_analysis: string | null
+          risk_level: string
+          scam_score: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actions?: Json
+          channel?: string
+          content: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          indicators?: Json
+          language?: string
+          raw_analysis?: string | null
+          risk_level?: string
+          scam_score?: number
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actions?: Json
+          channel?: string
+          content?: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          indicators?: Json
+          language?: string
+          raw_analysis?: string | null
+          risk_level?: string
+          scam_score?: number
+          title?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

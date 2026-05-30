@@ -9,6 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ScamRouteImport } from './routes/scam'
+import { Route as PropertyVerifyRouteImport } from './routes/property-verify'
+import { Route as NoticeCheckRouteImport } from './routes/notice-check'
+import { Route as ExplainRouteImport } from './routes/explain'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ChatRouteImport } from './routes/chat'
@@ -22,7 +26,28 @@ import { Route as ComplaintsNewRouteImport } from './routes/complaints.new'
 import { Route as ComplaintsIdRouteImport } from './routes/complaints.$id'
 import { Route as ApiGenerateRouteImport } from './routes/api/generate'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiAnalyzeRouteImport } from './routes/api/analyze'
 
+const ScamRoute = ScamRouteImport.update({
+  id: '/scam',
+  path: '/scam',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PropertyVerifyRoute = PropertyVerifyRouteImport.update({
+  id: '/property-verify',
+  path: '/property-verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NoticeCheckRoute = NoticeCheckRouteImport.update({
+  id: '/notice-check',
+  path: '/notice-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExplainRoute = ExplainRouteImport.update({
+  id: '/explain',
+  path: '/explain',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocumentsRoute = DocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
@@ -88,6 +113,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAnalyzeRoute = ApiAnalyzeRouteImport.update({
+  id: '/api/analyze',
+  path: '/api/analyze',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,6 +125,11 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
+  '/explain': typeof ExplainRoute
+  '/notice-check': typeof NoticeCheckRoute
+  '/property-verify': typeof PropertyVerifyRoute
+  '/scam': typeof ScamRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
   '/complaints/$id': typeof ComplaintsIdRoute
@@ -110,6 +145,11 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
+  '/explain': typeof ExplainRoute
+  '/notice-check': typeof NoticeCheckRoute
+  '/property-verify': typeof PropertyVerifyRoute
+  '/scam': typeof ScamRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
   '/complaints/$id': typeof ComplaintsIdRoute
@@ -126,6 +166,11 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/documents': typeof DocumentsRoute
+  '/explain': typeof ExplainRoute
+  '/notice-check': typeof NoticeCheckRoute
+  '/property-verify': typeof PropertyVerifyRoute
+  '/scam': typeof ScamRoute
+  '/api/analyze': typeof ApiAnalyzeRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate': typeof ApiGenerateRoute
   '/complaints/$id': typeof ComplaintsIdRoute
@@ -143,6 +188,11 @@ export interface FileRouteTypes {
     | '/chat'
     | '/dashboard'
     | '/documents'
+    | '/explain'
+    | '/notice-check'
+    | '/property-verify'
+    | '/scam'
+    | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
     | '/complaints/$id'
@@ -158,6 +208,11 @@ export interface FileRouteTypes {
     | '/chat'
     | '/dashboard'
     | '/documents'
+    | '/explain'
+    | '/notice-check'
+    | '/property-verify'
+    | '/scam'
+    | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
     | '/complaints/$id'
@@ -173,6 +228,11 @@ export interface FileRouteTypes {
     | '/chat'
     | '/dashboard'
     | '/documents'
+    | '/explain'
+    | '/notice-check'
+    | '/property-verify'
+    | '/scam'
+    | '/api/analyze'
     | '/api/chat'
     | '/api/generate'
     | '/complaints/$id'
@@ -189,6 +249,11 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   DashboardRoute: typeof DashboardRoute
   DocumentsRoute: typeof DocumentsRoute
+  ExplainRoute: typeof ExplainRoute
+  NoticeCheckRoute: typeof NoticeCheckRoute
+  PropertyVerifyRoute: typeof PropertyVerifyRoute
+  ScamRoute: typeof ScamRoute
+  ApiAnalyzeRoute: typeof ApiAnalyzeRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiGenerateRoute: typeof ApiGenerateRoute
   ComplaintsIdRoute: typeof ComplaintsIdRoute
@@ -201,6 +266,34 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/scam': {
+      id: '/scam'
+      path: '/scam'
+      fullPath: '/scam'
+      preLoaderRoute: typeof ScamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/property-verify': {
+      id: '/property-verify'
+      path: '/property-verify'
+      fullPath: '/property-verify'
+      preLoaderRoute: typeof PropertyVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notice-check': {
+      id: '/notice-check'
+      path: '/notice-check'
+      fullPath: '/notice-check'
+      preLoaderRoute: typeof NoticeCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explain': {
+      id: '/explain'
+      path: '/explain'
+      fullPath: '/explain'
+      preLoaderRoute: typeof ExplainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/documents': {
       id: '/documents'
       path: '/documents'
@@ -292,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/analyze': {
+      id: '/api/analyze'
+      path: '/api/analyze'
+      fullPath: '/api/analyze'
+      preLoaderRoute: typeof ApiAnalyzeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -301,6 +401,11 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   DashboardRoute: DashboardRoute,
   DocumentsRoute: DocumentsRoute,
+  ExplainRoute: ExplainRoute,
+  NoticeCheckRoute: NoticeCheckRoute,
+  PropertyVerifyRoute: PropertyVerifyRoute,
+  ScamRoute: ScamRoute,
+  ApiAnalyzeRoute: ApiAnalyzeRoute,
   ApiChatRoute: ApiChatRoute,
   ApiGenerateRoute: ApiGenerateRoute,
   ComplaintsIdRoute: ComplaintsIdRoute,
