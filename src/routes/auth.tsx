@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { Scale, Mail, Lock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+import { getAuthRedirectUrl } from "@/lib/auth-redirect";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
@@ -28,6 +28,15 @@ function AuthPage() {
   useEffect(() => {
     if (!loading && user) navigate({ to: "/chat", replace: true });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const oauthError = params.get("error_description") ?? params.get("error");
+    if (!oauthError) return;
+
+    toast.error(oauthError);
+    window.history.replaceState({}, document.title, "/auth");
+  }, []);
 
   const onEmail = async (e: FormEvent) => {
     e.preventDefault();
@@ -59,15 +68,13 @@ function AuthPage() {
   const onGoogle = async () => {
     setBusy(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: getAuthRedirectUrl(),
+        },
       });
-      if (result.error) {
-        toast.error(result.error.message || "Google sign-in failed");
-        setBusy(false);
-        return;
-      }
-      // result.redirected → browser navigates away. Otherwise session is set.
+      if (error) throw error;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Google sign-in failed");
       setBusy(false);

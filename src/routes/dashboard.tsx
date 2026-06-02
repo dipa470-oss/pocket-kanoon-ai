@@ -101,6 +101,7 @@ function DashboardPage() {
           </Link>
           <Link
             to="/chat"
+            search={{ new: "1" }}
             className="rounded-xl border border-border/60 bg-card-elegant p-6 hover:border-primary/50 transition-all"
           >
             <MessageSquare className="w-6 h-6 text-primary mb-3" />

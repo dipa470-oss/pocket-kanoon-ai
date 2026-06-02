@@ -23,7 +23,7 @@ import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/chat", label: "AI Lawyer", icon: MessageSquare },
+  { to: "/chat", label: "AI Lawyer", icon: MessageSquare, search: { new: "1" } },
   { to: "/complaints", label: "Complaints", icon: FileText },
   { to: "/fir", label: "FIR Drafts", icon: ShieldAlert },
   { to: "/explain", label: "Explain Doc", icon: FileSearch },
@@ -58,10 +58,11 @@ export function DashboardShell({ children, title }: { children: ReactNode; title
               <span className="text-[10px] uppercase tracking-[0.2em] text-primary/80">AI · India</span>
             </div>
           </Link>
-          {NAV.map(({ to, label, icon: Icon }) => (
+          {NAV.map(({ to, label, icon: Icon, search }) => (
             <Link
               key={to}
               to={to}
+              search={search}
               className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-accent/40 transition-colors"
               activeProps={{ className: "!text-foreground bg-accent/60 border border-border" }}
             >
@@ -91,10 +92,11 @@ export function DashboardShell({ children, title }: { children: ReactNode; title
         {/* Mobile bottom nav */}
         <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border overflow-x-auto">
           <div className="flex gap-1 py-2 px-2 min-w-max">
-            {NAV.map(({ to, label, icon: Icon }) => (
+            {NAV.map(({ to, label, icon: Icon, search }) => (
               <Link
                 key={to}
                 to={to}
+                search={search}
                 className="flex flex-col items-center gap-0.5 px-3 py-1 text-[10px] text-muted-foreground shrink-0"
                 activeProps={{ className: "!text-primary" }}
               >

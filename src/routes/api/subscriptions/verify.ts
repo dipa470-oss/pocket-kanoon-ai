@@ -4,6 +4,7 @@ import { getAuthUserFromRequest } from "@/lib/api/get-auth-user";
 import type { PlanId } from "@/lib/pricing";
 import { PLAN_PRICING } from "@/lib/pricing";
 import { verifySubscriptionPaymentSignature } from "@/lib/razorpay/verify";
+import { hasServiceRoleKey, isDevMode } from "@/lib/env";
 import {
   addMonths,
   applyPlanToSubscription,
@@ -46,6 +47,13 @@ export const Route = createFileRoute("/api/subscriptions/verify")({
         });
         if (!valid) {
           return Response.json({ error: "Invalid payment signature" }, { status: 400 });
+        }
+
+        if (!hasServiceRoleKey()) {
+          const message = isDevMode()
+            ? "Add SUPABASE_SERVICE_ROLE_KEY to .env.local to verify payments locally. See .env.local.example."
+            : "Billing is not configured on the server.";
+          return Response.json({ error: message }, { status: 503 });
         }
 
         const sub = await getSubscriptionByUserId(auth.userId);

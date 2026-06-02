@@ -1,6 +1,7 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/env";
 
 function unauthorizedResponse(message: string) {
   return new Response(JSON.stringify({ error: message }), {
@@ -14,15 +15,15 @@ function unauthorizedResponse(message: string) {
  * Same bearer validation as requireSupabaseAuth (function middleware).
  */
 export const requireSupabaseAuthRequest = createMiddleware().server(async ({ request, next }) => {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const SUPABASE_URL = getSupabaseUrl();
+  const SUPABASE_PUBLISHABLE_KEY = getSupabaseAnonKey();
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [
-      ...(!SUPABASE_URL ? ["SUPABASE_URL"] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
+      ...(!SUPABASE_URL ? ["SUPABASE_URL or VITE_SUPABASE_URL"] : []),
+      ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY or VITE_SUPABASE_PUBLISHABLE_KEY"] : []),
     ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Connect Supabase in Lovable Cloud.`;
+    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Copy .env.local.example to .env.local.`;
     console.error(`[Supabase] ${message}`);
     return new Response(JSON.stringify({ error: message }), {
       status: 500,

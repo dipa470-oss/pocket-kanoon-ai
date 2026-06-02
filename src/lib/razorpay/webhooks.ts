@@ -1,6 +1,6 @@
 import type { PlanId } from "@/lib/pricing";
 import { PLAN_PRICING } from "@/lib/pricing";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAdmin } from "@/integrations/supabase/client.server";
 import {
   addMonths,
   applyPlanToSubscription,
@@ -28,7 +28,7 @@ function planFromNotes(notes: unknown): PlanId | null {
 }
 
 async function findUserByRazorpaySubscriptionId(razorpaySubId: string) {
-  const { data } = await supabaseAdmin
+  const { data } = await requireSupabaseAdmin()
     .from("subscriptions")
     .select("*")
     .eq("razorpay_subscription_id", razorpaySubId)
@@ -43,7 +43,7 @@ function periodEndFromEntity(entity: RazorpayEntity): Date | null {
 }
 
 export async function storeWebhookEvent(eventId: string, eventType: string, payload: unknown) {
-  await supabaseAdmin.from("razorpay_webhook_events").upsert(
+  await requireSupabaseAdmin().from("razorpay_webhook_events").upsert(
     {
       event_id: eventId,
       event_type: eventType,
@@ -54,7 +54,7 @@ export async function storeWebhookEvent(eventId: string, eventType: string, payl
 }
 
 export async function markWebhookProcessed(eventId: string, errorMessage?: string) {
-  await supabaseAdmin
+  await requireSupabaseAdmin()
     .from("razorpay_webhook_events")
     .update({
       processed_at: new Date().toISOString(),
@@ -187,7 +187,7 @@ export async function ensureCustomerAndSubscription(params: {
       notes: { user_id: userId },
     });
     customerId = customer.id;
-    await supabaseAdmin
+    await requireSupabaseAdmin()
       .from("subscriptions")
       .update({ razorpay_customer_id: customerId })
       .eq("user_id", userId);
@@ -215,7 +215,7 @@ export async function ensureCustomerAndSubscription(params: {
     notes: { user_id: userId, plan: planId },
   });
 
-  await supabaseAdmin
+  await requireSupabaseAdmin()
     .from("subscriptions")
     .update({
       razorpay_customer_id: customerId,

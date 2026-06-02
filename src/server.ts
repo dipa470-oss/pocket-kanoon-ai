@@ -1,4 +1,7 @@
 import "./lib/error-capture";
+import { logServerEnvOnBoot } from "@/lib/env";
+
+logServerEnvOnBoot();
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";

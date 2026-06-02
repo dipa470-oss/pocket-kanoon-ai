@@ -10,7 +10,8 @@ import {
   downgradeToFree,
   getSubscriptionByUserId,
 } from "@/lib/subscriptions/service";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getSupabaseAdmin } from "@/integrations/supabase/client.server";
+import { hasServiceRoleKey, isDevMode } from "@/lib/env";
 
 export const Route = createFileRoute("/api/subscriptions/change-plan")({
   server: {
@@ -33,6 +34,15 @@ export const Route = createFileRoute("/api/subscriptions/change-plan")({
         if (!targetPlan || !PLAN_IDS.includes(targetPlan)) {
           return Response.json({ error: "Invalid planId" }, { status: 400 });
         }
+
+        if (!hasServiceRoleKey()) {
+          const message = isDevMode()
+            ? "Add SUPABASE_SERVICE_ROLE_KEY to .env.local to change plans locally. See .env.local.example."
+            : "Billing is not configured on the server.";
+          return Response.json({ error: message }, { status: 503 });
+        }
+
+        const supabaseAdmin = getSupabaseAdmin()!;
 
         const current = await getSubscriptionByUserId(auth.userId);
         if (!current) {

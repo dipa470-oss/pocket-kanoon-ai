@@ -6,7 +6,8 @@ import { getRazorpayClient } from "@/lib/razorpay/client";
 import { getRazorpayKeyId, razorpayConfigured } from "@/lib/razorpay/config";
 import { ensureCustomerAndSubscription } from "@/lib/razorpay/webhooks";
 import { downgradeToFree } from "@/lib/subscriptions/service";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getSupabaseAdmin } from "@/integrations/supabase/client.server";
+import { hasServiceRoleKey, isDevMode } from "@/lib/env";
 
 export const Route = createFileRoute("/api/subscriptions/checkout")({
   server: {
@@ -31,6 +32,20 @@ export const Route = createFileRoute("/api/subscriptions/checkout")({
         }
 
         if (planId === "free") {
+          if (!hasServiceRoleKey()) {
+            if (isDevMode()) {
+              return Response.json({
+                success: true,
+                plan: "free",
+                skipped: true,
+                reason: "SUPABASE_SERVICE_ROLE_KEY not configured (development)",
+              });
+            }
+            return Response.json(
+              { error: "Billing is not configured on the server." },
+              { status: 503 },
+            );
+          }
           await downgradeToFree(auth.userId);
           return Response.json({ success: true, plan: "free" });
         }
@@ -40,6 +55,14 @@ export const Route = createFileRoute("/api/subscriptions/checkout")({
             { error: "Payments are not configured. Contact support." },
             { status: 503 },
           );
+        }
+
+        const supabaseAdmin = getSupabaseAdmin();
+        if (!supabaseAdmin) {
+          const message = isDevMode()
+            ? "Add SUPABASE_SERVICE_ROLE_KEY to .env.local to test checkout locally. See .env.local.example."
+            : "Billing is not configured on the server.";
+          return Response.json({ error: message }, { status: 503 });
         }
 
         const { data: profile } = await supabaseAdmin

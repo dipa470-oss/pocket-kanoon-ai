@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { getSupabaseAdmin } from "@/integrations/supabase/client.server";
+import { hasServiceRoleKey } from "@/lib/env";
 import { verifyWebhookSignature } from "@/lib/razorpay/verify";
 import {
   markWebhookProcessed,
@@ -28,6 +29,15 @@ export const Route = createFileRoute("/api/webhooks/razorpay")({
         const eventId =
           (typeof body.id === "string" && body.id) ||
           `${body.event}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+        if (!hasServiceRoleKey()) {
+          return Response.json(
+            { error: "SUPABASE_SERVICE_ROLE_KEY required for webhook processing" },
+            { status: 503 },
+          );
+        }
+
+        const supabaseAdmin = getSupabaseAdmin()!;
 
         const { data: existingEvent } = await supabaseAdmin
           .from("razorpay_webhook_events")

@@ -3,11 +3,15 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Scale, Send, Loader2, LogOut, Plus, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useChat, type ChatMessage } from "@/hooks/useChat";
 import { toast } from "sonner";
 import { authenticatedFetch } from "@/lib/authenticated-fetch";
 
-type Msg = { id?: string; role: "user" | "assistant"; content: string };
-type Conv = { id: string; title: string; updated_at: string };
+type ChatSearch = {
+  new?: string;
+  module?: string;
+  title?: string;
+};
 
 const LANGS = [
   ["en", "English"],
@@ -23,6 +27,11 @@ const LANGS = [
 ] as const;
 
 export const Route = createFileRoute("/chat")({
+  validateSearch: (search: Record<string, unknown>): ChatSearch => ({
+    new: typeof search.new === "string" ? search.new : undefined,
+    module: typeof search.module === "string" ? search.module : undefined,
+    title: typeof search.title === "string" ? search.title : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "AI Personal Lawyer — Pocket Lawyer AI" },
@@ -35,10 +44,19 @@ export const Route = createFileRoute("/chat")({
 function ChatPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const search = Route.useSearch();
 
-  const [conversations, setConversations] = useState<Conv[]>([]);
-  const [convId, setConvId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Msg[]>([]);
+  const {
+    conversationId: convId,
+    conversations,
+    loadConversations,
+    startConversation,
+    selectConversation,
+    resetConversation,
+    insertMessage,
+  } = useChat(user?.id);
+
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [language, setLanguage] = useState<string>("en");
@@ -48,22 +66,29 @@ function ChatPage() {
     if (!loading && !user) navigate({ to: "/auth", replace: true });
   }, [loading, user, navigate]);
 
-  // load conversations
   useEffect(() => {
     if (!user) return;
+    void loadConversations();
     (async () => {
-      const { data } = await supabase
-        .from("conversations")
-        .select("id,title,updated_at")
-        .order("updated_at", { ascending: false });
-      setConversations(data ?? []);
       const { data: profile } = await supabase
         .from("profiles")
         .select("preferred_language")
         .maybeSingle();
       if (profile?.preferred_language) setLanguage(profile.preferred_language);
     })();
-  }, [user]);
+  }, [user, loadConversations]);
+
+  // Opening from dashboard/features with ?new=1 — create conversation before first message
+  useEffect(() => {
+    if (!user || search.new !== "1") return;
+    void startConversation({
+      title: search.title ?? "New chat",
+      module: search.module ?? "personal_lawyer",
+      forceNew: true,
+    }).catch((err) => {
+      toast.error(err instanceof Error ? err.message : "Could not start conversation");
+    });
+  }, [user, search.new, search.title, search.module, startConversation]);
 
   // load messages when convId changes
   useEffect(() => {
@@ -77,7 +102,7 @@ function ChatPage() {
         .select("id,role,content")
         .eq("conversation_id", convId)
         .order("created_at", { ascending: true });
-      setMessages((data ?? []) as Msg[]);
+      setMessages((data ?? []) as ChatMessage[]);
     })();
   }, [convId]);
 
@@ -85,32 +110,19 @@ function ChatPage() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, sending]);
 
-  const newChat = () => {
-    setConvId(null);
+  const newChat = async () => {
+    resetConversation();
     setMessages([]);
+    try {
+      await startConversation({ title: "New chat", forceNew: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not start conversation");
+    }
   };
 
   const signOut = async () => {
     await supabase.auth.signOut();
     navigate({ to: "/", replace: true });
-  };
-
-  const ensureConversation = async (firstUserMessage: string): Promise<string | null> => {
-    if (convId) return convId;
-    if (!user) return null;
-    const title = firstUserMessage.slice(0, 60);
-    const { data, error } = await supabase
-      .from("conversations")
-      .insert({ user_id: user.id, title, module: "personal_lawyer" })
-      .select("id,title,updated_at")
-      .single();
-    if (error || !data) {
-      toast.error("Could not start conversation");
-      return null;
-    }
-    setConvId(data.id);
-    setConversations((prev) => [data, ...prev]);
-    return data.id;
   };
 
   const send = async (e: FormEvent) => {
@@ -120,20 +132,27 @@ function ChatPage() {
     setInput("");
     setSending(true);
 
-    const cid = await ensureConversation(text);
-    if (!cid) {
+    let cid: string;
+    try {
+      cid = await startConversation({ title: text, module: search.module ?? "personal_lawyer" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not start conversation");
       setSending(false);
       return;
     }
 
-    const userMsg: Msg = { role: "user", content: text };
+    const userMsg: ChatMessage = { role: "user", content: text };
     const nextHistory = [...messages, userMsg];
     setMessages([...nextHistory, { role: "assistant", content: "" }]);
 
-    // persist user message
-    await supabase
-      .from("messages")
-      .insert({ conversation_id: cid, user_id: user.id, role: "user", content: text });
+    try {
+      await insertMessage(cid, { role: "user", content: text });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save message");
+      setMessages((prev) => prev.slice(0, -1));
+      setSending(false);
+      return;
+    }
 
     let assistantText = "";
     try {
@@ -193,12 +212,11 @@ function ChatPage() {
       }
 
       if (assistantText) {
-        await supabase.from("messages").insert({
-          conversation_id: cid,
-          user_id: user.id,
-          role: "assistant",
-          content: assistantText,
-        });
+        try {
+          await insertMessage(cid, { role: "assistant", content: assistantText });
+        } catch (err) {
+          console.error("Failed to save assistant message:", err);
+        }
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
@@ -241,7 +259,7 @@ function ChatPage() {
           {conversations.map((c) => (
             <button
               key={c.id}
-              onClick={() => setConvId(c.id)}
+              onClick={() => selectConversation(c.id)}
               className={`w-full flex items-center gap-2 text-left text-sm px-3 py-2 rounded-md transition-colors truncate ${
                 convId === c.id
                   ? "bg-accent text-foreground"
