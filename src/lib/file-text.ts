@@ -21,7 +21,7 @@ export async function extractTextFromFile(file: File, onProgress?: (msg: string)
 async function extractPdf(file: File): Promise<string> {
   const pdfjs: any = await import("pdfjs-dist/build/pdf.mjs");
   // Disable worker — runs on main thread (simpler, no separate worker URL needed)
-  pdfjs.GlobalWorkerOptions.workerSrc = "";
+  pdfjs.GlobalWorkerOptions.workerSrc = "//unpkg.com/pdfjs-dist@5.7.284/build/pdf.worker.min.mjs";
   const buf = await file.arrayBuffer();
   const doc = await pdfjs.getDocument({ data: buf, disableWorker: true, isEvalSupported: false }).promise;
   let out = "";

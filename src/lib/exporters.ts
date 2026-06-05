@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import { Document, Packer, Paragraph, TextRun, AlignmentType } from "docx";
-import { saveAs } from "file-saver";
+import pkg from "file-saver";
+const { saveAs } = pkg;
 
 function safeName(name: string) {
   return name.replace(/[^a-z0-9-_]+/gi, "_").slice(0, 80) || "document";
