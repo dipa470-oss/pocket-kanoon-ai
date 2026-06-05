@@ -4,11 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+  LOVABLE_CONTEXT = "netlify"
 
 [[redirects]]
   from = "/*"
