@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { requireSupabaseAuthRequest } from "@/integrations/supabase/require-auth-request";
 
-const GROQ_KEY = "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";
+const GROQ_KEY = process.env.GROQ_API_KEY || "";;
 
 const SYSTEM = `You are a senior Indian legal drafter. Generate a professional, formal complaint letter or FIR draft based on user inputs. Use proper legal language and relevant Indian acts.`;
 

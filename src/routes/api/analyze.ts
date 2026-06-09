@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { requireSupabaseAuthRequest } from "@/integrations/supabase/require-auth-request";
 
-const GROQ_KEY = "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";
+const GROQ_KEY = process.env.GROQ_API_KEY || "";;
 
 const SYSTEM = `You are a senior Indian legal analyst. Analyze documents and provide: summary, key points, risks, recommendations, and applicable Indian laws.`;
 
