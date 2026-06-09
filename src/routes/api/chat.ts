@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { requireSupabaseAuthRequest } from "@/integrations/supabase/require-auth-request";
 
-const GROQ_KEY = "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";
+const GROQ_KEY = process.env.GROQ_API_KEY || "";;
 
 const SYSTEM = `You are "Pocket Lawyer AI", a knowledgeable assistant for Indian legal matters. Help Indian citizens understand the law in plain language. Reply in the user's language. Always end with: "This is general guidance, not legal advice."`;
 
